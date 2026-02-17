@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { MapPin, Plus, Trash2, Loader2 } from "lucide-react";
+import { MapPin, Plus, Trash2, RotateCcw, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -139,6 +139,23 @@ export function CadastrarCepPage() {
     }
   };
 
+  const handleRetry = async (cepRetry: Cep) => {
+    try {
+      const res = await fetch(`/api/v1/ceps/${cepRetry.id}/retry`, {
+        method: "POST",
+      });
+      if (res.ok) {
+        const atualizado: Cep = await res.json();
+        setCepsCadastrados((prev) =>
+          prev.map((c) => (c.id === atualizado.id ? atualizado : c))
+        );
+        toast.success(`CEP ${formatarCepExibicao(cepRetry.cep)} reenfileirado`);
+      }
+    } catch {
+      toast.error("Erro ao reprocessar CEP");
+    }
+  };
+
   const handleRemover = async (cepRemover: Cep) => {
     try {
       const res = await fetch(`/api/v1/ceps/${cepRemover.id}`, {
@@ -222,14 +239,27 @@ export function CadastrarCepPage() {
                     </span>
                     <StatusBadge cep={c} />
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleRemover(c)}
-                    className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
+                  <div className="flex items-center gap-1">
+                    {c.status === "erro" && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleRetry(c)}
+                        className="h-8 w-8 text-muted-foreground hover:text-accent"
+                        title="Reprocessar"
+                      >
+                        <RotateCcw className="w-4 h-4" />
+                      </Button>
+                    )}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleRemover(c)}
+                      className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
               ))}
             </div>
