@@ -51,4 +51,4 @@ jobs:
         run: |
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            'cd /home/ismael/ed-admin && npm ci && sudo systemctl restart easydoor-admin'
+            'cd /home/ismael/ed-admin && npm ci && sudo systemctl restart ed-admin'
