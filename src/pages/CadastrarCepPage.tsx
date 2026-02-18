@@ -238,7 +238,7 @@ export function CadastrarCepPage() {
             )}
             <Input
               type="text"
-              autoComplete="off"
+              autoComplete="on"
               value={texto}
               onChange={handleTextoChange}
               onFocus={() => sugestoes.length > 0 && setDropdownAberto(true)}
