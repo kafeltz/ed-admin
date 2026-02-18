@@ -15,6 +15,7 @@ import {
 interface Cep {
   id: number;
   cep: string;
+  tipo: "apartamento" | "casa" | null;
   status: "pendente" | "processando" | "concluido" | "erro";
   erro_msg: string | null;
   tentativas: number;
@@ -72,6 +73,7 @@ function StatusBadge({ cep }: { cep: Cep }) {
 
 export function CadastrarCepPage() {
   const [texto, setTexto] = useState("");
+  const [tipo, setTipo] = useState<"apartamento" | "casa">("apartamento");
   const [sugestoes, setSugestoes] = useState<EnderecoSugestao[]>([]);
   const [dropdownAberto, setDropdownAberto] = useState(false);
   const [buscando, setBuscando] = useState(false);
@@ -158,7 +160,7 @@ export function CadastrarCepPage() {
       const res = await fetch("/api/v1/ceps", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cep: cepLimpo }),
+        body: JSON.stringify({ cep: cepLimpo, tipo }),
       });
 
       if (res.status === 409) {
@@ -230,7 +232,31 @@ export function CadastrarCepPage() {
             Digite o endereço ou CEP da região que deseja monitorar
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => setTipo("apartamento")}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+                tipo === "apartamento"
+                  ? "bg-accent text-accent-foreground border-accent"
+                  : "border-border text-muted-foreground hover:border-accent/50"
+              }`}
+            >
+              Apartamentos
+            </button>
+            <button
+              type="button"
+              onClick={() => setTipo("casa")}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+                tipo === "casa"
+                  ? "bg-accent text-accent-foreground border-accent"
+                  : "border-border text-muted-foreground hover:border-accent/50"
+              }`}
+            >
+              Casas
+            </button>
+          </div>
           <div ref={wrapperRef} className="relative">
             <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground z-10" />
             {buscando && (
@@ -296,6 +322,11 @@ export function CadastrarCepPage() {
                     <span className="font-mono text-sm font-medium">
                       {formatarCepExibicao(c.cep)}
                     </span>
+                    {c.tipo && (
+                      <Badge variant="outline" className="text-xs capitalize">
+                        {c.tipo === "apartamento" ? "Apto" : "Casa"}
+                      </Badge>
+                    )}
                     <StatusBadge cep={c} />
                   </div>
                   <div className="flex items-center gap-1">
