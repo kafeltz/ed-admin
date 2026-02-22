@@ -98,8 +98,15 @@ export function CadastrarCepPage() {
     try {
       const res = await fetch("/api/v1/ceps");
       if (res.ok) {
-        const data = await res.json();
+        const data: Cep[] = await res.json();
         setCepsCadastrados(data);
+        const temAtivos = data.some(
+          (c) => c.status === "pendente" || c.status === "processando"
+        );
+        if (!temAtivos && intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
       }
     } catch {
       // silencioso — polling vai tentar de novo
