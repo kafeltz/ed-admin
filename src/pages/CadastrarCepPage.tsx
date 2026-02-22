@@ -185,6 +185,9 @@ export function CadastrarCepPage() {
       setCepsCadastrados((prev) => [novo, ...prev]);
       setTexto("");
       toast.success(`${sugestao.label} cadastrado e enfileirado`);
+      if (!intervalRef.current) {
+        intervalRef.current = setInterval(buscarCeps, 5000);
+      }
     } catch {
       toast.error("Erro de conexao com o servidor");
     } finally {
@@ -203,6 +206,9 @@ export function CadastrarCepPage() {
           prev.map((c) => (c.id === atualizado.id ? atualizado : c))
         );
         toast.success(`CEP ${formatarCepExibicao(cepRetry.cep)} reenfileirado`);
+        if (!intervalRef.current) {
+          intervalRef.current = setInterval(buscarCeps, 5000);
+        }
       }
     } catch {
       toast.error("Erro ao reprocessar CEP");
