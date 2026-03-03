@@ -1,11 +1,12 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, MapPin, Building2, ClipboardList, Shield } from "lucide-react";
+import { LayoutDashboard, MapPin, Building2, ClipboardList, Settings, Shield } from "lucide-react";
 
 const navItems = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/ceps", label: "Cadastrar CEP", icon: MapPin },
   { to: "/imoveis", label: "Imoveis", icon: Building2 },
   { to: "/avaliacoes", label: "Avaliacoes", icon: ClipboardList },
+  { to: "/configuracoes", label: "Configurações", icon: Settings },
 ];
 
 export function Header() {

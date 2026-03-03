@@ -4,6 +4,7 @@ import { DashboardPage } from "@/pages/DashboardPage";
 import { CadastrarCepPage } from "@/pages/CadastrarCepPage";
 import { ImoveisPage } from "@/pages/ImoveisPage";
 import { AvaliacoesPage } from "@/pages/AvaliacoesPage";
+import { ConfiguracoesPage } from "@/pages/ConfiguracoesPage";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/ceps" element={<CadastrarCepPage />} />
         <Route path="/imoveis" element={<ImoveisPage />} />
         <Route path="/avaliacoes" element={<AvaliacoesPage />} />
+        <Route path="/configuracoes" element={<ConfiguracoesPage />} />
       </Route>
     </Routes>
   );
