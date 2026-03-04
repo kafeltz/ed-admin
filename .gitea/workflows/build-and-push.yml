@@ -49,10 +49,15 @@ jobs:
             sleep 5
           done
 
+      # ╔══════════════════════════════════════════════════════════════╗
+      # ║  NÃO USAR prefixo "GITEA_" em secrets!                      ║
+      # ║  O Gitea PROÍBE secrets com esse prefixo — são silencio-     ║
+      # ║  samente ignorados e a autenticação FALHA sem erro claro.    ║
+      # ╚══════════════════════════════════════════════════════════════╝
       - name: Trigger deploy no ed-infra
         run: |
           curl -s -X POST \
-            -H "Authorization: token ${{ secrets.GITEA_TOKEN }}" \
+            -H "Authorization: token ${{ secrets.TOKEN }}" \
             -H "Content-Type: application/json" \
             -d '{"event_type":"service-updated","client_payload":{"service":"ed-admin"}}' \
             "https://git.easydoor.ai/api/v1/repos/EasyDoor/ed-infra/dispatches"
