@@ -56,11 +56,21 @@ jobs:
       # ╚══════════════════════════════════════════════════════════════╝
       - name: Trigger deploy no ed-infra
         run: |
-          curl -s -X POST \
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" -X POST \
             -H "Authorization: token ${{ secrets.TOKEN }}" \
             -H "Content-Type: application/json" \
             -d '{"event_type":"service-updated","client_payload":{"service":"ed-admin"}}' \
-            "https://git.easydoor.ai/api/v1/repos/EasyDoor/ed-infra/dispatches"
+            "https://git.easydoor.ai/api/v1/repos/EasyDoor/ed-infra/dispatches")
+
+          HTTP_STATUS=$(echo "$RESPONSE" | grep "HTTP_STATUS" | cut -d: -f2)
+          BODY=$(echo "$RESPONSE" | grep -v "HTTP_STATUS")
+          echo "Status: $HTTP_STATUS"
+          echo "Response: $BODY"
+
+          if [ "$HTTP_STATUS" != "204" ]; then
+            echo "ERRO: dispatch falhou com status $HTTP_STATUS"
+            exit 1
+          fi
 
       - name: Cleanup Docker
         if: always()
